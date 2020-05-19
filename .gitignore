@@ -1,0 +1,4 @@
+.ipy*
+*.gz
+mnist/*
+data/*
