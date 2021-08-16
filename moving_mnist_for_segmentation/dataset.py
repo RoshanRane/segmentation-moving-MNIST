@@ -66,7 +66,7 @@ Allowed values are 'train', 'val', or 'test'")
             Image with dimensions H x W x C or H x W if it's a single channel image
         '''
         img_std = (((img + mean)*255.)*std).astype(np.uint8)
-        img_std = img_std.clip(0, 255).transpose(2,1,0).squeeze()
+        img_std = img_std.clip(0, 255).transpose(1,2,0).squeeze()
         return img_std
     
     def generate(
@@ -194,7 +194,7 @@ Allowed values are 'train', 'val', or 'test'")
                 dataset[vid_idx, frame_idx, 0] = canvas.clip(0, 255).astype(np.uint8) 
                 dataset_masks[vid_idx, frame_idx, 0] = (canvas_mask).astype(np.uint8)  
             # Add the label to the dataset labels array
-            dataset_labels[vid_idx, :nums_per_image] = mnist_labels
+            dataset_labels[vid_idx, :, :nums_per_image] = np.array(mnist_labels)
         # store for class
         self.cur_dataset = dataset
         self.cur_dataset_masks = dataset_masks
@@ -214,7 +214,7 @@ Allowed values are 'train', 'val', or 'test'")
             lbls = list(self.cur_dataset_labels[plot_vid,0])
             if 10 in lbls: lbls.remove(10)
             fig = plt.figure(figsize=(5*num_frames,10))
-            plt.suptitle("Sample {} : MNIST digits {}".format(i+1, lbls), x=0.23, y=0.95, fontsize=40)
+            plt.suptitle("Sample {}: contains MNIST digits {}".format(i+1, lbls), x=0.23, y=0.95, fontsize=40)
             fig.subplots_adjust(wspace = 0.01, hspace = 0.02)
             for i in range(num_frames):
                 plt.subplot(2, num_frames, i+1).axis('off')
